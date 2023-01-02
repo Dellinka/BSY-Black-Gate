@@ -1,8 +1,11 @@
 import os
 import sys
+from random import random
 
 import requests
 import gistyc
+
+from Controller import emojis
 
 
 def get_gist_api():
@@ -52,7 +55,7 @@ def init_bot_list(gist_api, bot_list="CatsIWantToPet.md", list_content="# All th
 
 def get_raw(gist_api, filename):
     """
-    Get content of the post
+    Get content of the filename gist post.
 
     :param gist_api:        Gist api grom get_gist_api() function
     :param filename:        Filename of the post to get
@@ -74,11 +77,31 @@ def get_raw(gist_api, filename):
 
 
 def update_gist(gist_api, filename, content):
+    """
+    Update the gist post of specified filename. Send the specified content.
+
+    :param gist_api:        Gist api grom get_gist_api() function
+    :param filename:        Filename of the gist post to be updated
+    :param content:         String content of the new post
+    :return: None
+    """
     f = open("tmp/" + filename, "w")
     f.write(content)
     f.close()
     gist_api.update_gist('tmp/' + filename)
     os.remove('tmp/' + filename)
+
+
+def reset_status(content):
+    """
+    Change the status (level of cuteness) in specified post to reset emoji.
+
+    :param content:        Content of the gistpost
+    :return: updated:      Updated content
+    """
+    content_split = content.split('\n')
+    content_split[1] = "### Level of cuteness " + random.choice(emojis.status_code['reset'])
+    return "\n".join(content_split)
 
 
 def init_folders():

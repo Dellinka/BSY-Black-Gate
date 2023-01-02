@@ -1,7 +1,7 @@
 import sys
 import time
 from Controller import gist
-from Controller.Commands import alive
+from Controller.Commands import ping
 from threading import Thread
 from timeit import default_timer as timer
 
@@ -9,6 +9,8 @@ from Controller.Commands.ls_bots import list_current_bots
 
 
 def reader():
+    print("Waiting for input (type help for help 🙃)")
+
     while True:
         read = sys.stdin.readline()
         cmd = read.split()
@@ -48,7 +50,7 @@ def reader():
                 EXECUTE_CMDS.append(["exec", cmd[1], cmd[2]])
             case _:
                 print("usage: <command name> [bot name] [parameter1 ...]\n\n"
-                      "\tls_bots.py \t\t\t\t(lists all currently available bots)\n"
+                      "\tls_bots \t\t\t\t(lists all currently available bots)\n"
                       "\tw  <bot id> \t\t\t(lists users currently logged in)\n"
                       "\tls <bot id> <PATH> \t(list content of specified directory)\n"
                       "\tid <bot id> \t\t\t(id of current user)\n"
@@ -78,15 +80,22 @@ def executor():
                     print("Unknown command" + cmd[0])
 
         # Check if the bots are alive every 5 minutes
-        if timer() - start > 10:    # TODO 5 min = 300 s
+        if timer() - start > 30:    # TODO: 5 min = 300 s
             # Reset bots
-            print("Starting bot reset ...")
-            alive.reset_bots(GIST_API, BOT_LIST)
-            time.sleep(2)
+            response_time = 15
+            print("----- CHECKING ALIVE BOTS -----", file=sys.stderr)
+            ping.send(GIST_API, BOT_LIST)
+
+            print("WAITING FOR BOTS TO RESPOND", file=sys.stderr, end="")
+            for i in range(response_time, 0, -1):
+                time.sleep(1)
+                print(".", file=sys.stderr, end="")
+
             # Check if bots are alive -> remove dead
-            print("Removing dead bots...")
-            alive.check_bots(GIST_API, BOT_LIST)
+            print("\nREMOVING DEAD BOTS", file=sys.stderr)
+            ping.check(GIST_API, BOT_LIST)
             start = timer()
+            print("----- BOT CHECK COMPLETE -----", file=sys.stderr)
 
 
 # Prepare helper folders

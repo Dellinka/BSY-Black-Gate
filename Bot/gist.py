@@ -4,6 +4,16 @@ import requests
 import gistyc
 
 
+def init_folders():
+    # Create tmp dir if not exists
+    if not os.path.exists('tmp'):
+        os.mkdir('tmp')
+
+
+def clean_up_folders():
+    os.rmdir('tmp')
+
+
 def get_gist_api():
     """
     From AUTH_TOKEN ../token.txt get GIST_API and return
@@ -30,7 +40,7 @@ def init(gist_api, name, filename, bot_list):
     :param: gist_api:        Gist api from get_gist_api() function
     :return: None
     """
-    # ------ Check if this name is in bot list ------
+    # Check if this name is in bot list
     if "[" + name + "]" in get_raw(gist_api, bot_list):
         print(name + " SAYS BYE BYE (There is already a bot with this name in bot list)", file=sys.stderr)
         exit(-2)
@@ -61,7 +71,7 @@ def create_bot_post(gist_api, name, filename):
     # If name not used -> Create bot/cat post on gist
     if not name_exists:
         f = open("tmp/" + filename, "w")
-        f.write("# " + name + "\n### Level of cuteness 🐈 \n### Level of fluffiness 🫶 \n### TODO image")
+        f.write("# " + name + "\n### Level of cuteness 🐈 \n### Level of fluffiness 🐈‍⬛ \n### TODO image")
         f.close()
 
         # Add file to GIST
@@ -70,7 +80,7 @@ def create_bot_post(gist_api, name, filename):
 
         # Remove file from tmp
         os.remove('tmp/' + filename)
-        print("{} has been created".format(filename))
+        print("{} post has been created".format(filename))
 
     return bot_url
 
@@ -94,6 +104,14 @@ def add_to_bot_list(gist_api, name, filename, bot_url, bot_list):
 
 
 def update_gist(gist_api, filename, content):
+    """
+    Update gist post.
+
+    :param gist_api:    Gist api grom get_gist_api() function
+    :param filename:    Filename to be updated
+    :param content:     New content
+    :return:
+    """
     f = open("tmp/" + filename, "w")
     f.write(content)
     f.close()
@@ -124,11 +142,25 @@ def get_raw(gist_api, filename):
     return f.text
 
 
-def init_folders():
-    # Create tmp dir if not exists
-    if not os.path.exists('tmp'):
-        os.mkdir('tmp')
+def get_command_emoji(gist_api, filename):
+    """
+    Get emoji for the command (see emojis.commands). It is the emoji in the level of fluffiness.
+
+    :param gist_api:    Gist api grom get_gist_api() function
+    :param filename:    Filename of the bot
+    :return:cmd:        Command for the bot
+    """
+    bot_content = get_raw(gist_api, filename)
+    return bot_content.split('\n')[2].split("fluffiness")[-1].strip()
 
 
-def clean_up_folders():
-    os.rmdir('tmp')
+def get_status_emoji(gist_api, filename):
+    """
+    Get emoji for the status (see emojis.status). It is the emoji in the level of cuteness.
+
+    :param gist_api:    Gist api grom get_gist_api() function
+    :param filename:    Filename of the bot
+    :return:cmd:        Status of the bot
+    """
+    bot_content = get_raw(gist_api, filename)
+    return bot_content.split('\n')[1].split("cuteness")[-1].strip()
