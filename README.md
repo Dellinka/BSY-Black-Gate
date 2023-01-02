@@ -9,6 +9,20 @@ Each bot has predefined post with these headings (SAME ORDER AND ### HEADINGS!)
 - Interesting links = for sending small string data
 - Image = for sending larger data
 
+
+## IMPORTANT
+The controller and bot communicates via gist.github.com. For that GitHub Personal access token with GIST access is improtant. You have to create a ```token.txt``` file (in this repository root directory) with this token to run the code. 
+
+How to get the Personal access token with GIST access:
+  - Click on your personal account profile (top right)
+  - Click <b>Settings</b>
+  - On the left menu bar go to <b>Developer settings</b> and choose <b>Personal access tokens</b>
+  - <b>Generate new token</b> and write a name (note) of your token. The note does not affect the functionality, but choose a note that describes the purpose of the token e.g., <i>GIST_token</i>
+  - Set a mark at <b>gist</b> (<i>Create gists</i>) and click on <b>Generate token</b> at the bottom of the page
+  - IMPORTANT: The displayed token appears only once. Copy it and store it in your GitHub project as a secret and / or locally as an environment variable.
+
+
+
 ## Bot
 **Bot** takes one parameter to run - PATH to directory with ```params.txt``` and ```imgs``` directory. Inside the ```params.txt``` is JSON with bots parameters including name, filename and urls (see example file for more info). Inside the ```imgs``` directory are possible images for use in gist.
 
