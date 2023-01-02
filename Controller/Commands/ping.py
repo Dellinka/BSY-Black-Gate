@@ -13,7 +13,6 @@ def send(gist_api, bot_list):
     :param bot_list:
     :return: None
     """
-    # Reset status code (level of cuteness)
     bot_list_content = gist.get_raw(gist_api, bot_list)
     lines = bot_list_content.split('\n')
     print("SENDING PING TO BOTS", file=sys.stderr, end="")
@@ -21,15 +20,7 @@ def send(gist_api, bot_list):
         if not line.startswith('###'):
             continue
 
-        print(".", file=sys.stderr, end="")
-        filename = line.split("(")[1].split("#")[1].rstrip(')')
-        bot_post_content = gist.get_raw(gist_api, filename)
-        content_split = bot_post_content.split('\n')
-        # Change status to reset
-        content_split[1] = "### Level of cuteness " + random.choice(emojis.status_code['reset'])
-        # Send ping command
-        content_split[2] = "### Level of fluffiness " + emojis.command['ping']
-        gist.update_gist(gist_api, filename, "\n".join(content_split))
+        gist.send_command(gist_api, 'ping', line.split("(")[1].split("#")[1].rstrip(')', ), debug=False)
 
     print(file=sys.stderr)
 

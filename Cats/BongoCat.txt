@@ -1,0 +1,8 @@
+{
+	"name": "Bongo cat",
+	"filename": "bongo_cat.md",
+	"urls": [
+		["Bongo cat original", "https://www.youtube.com/watch?v=_YSF5iHpGnU"],
+		["Play with bongo cat!", "https://bongo.cat/"]
+	]
+}

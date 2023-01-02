@@ -1,0 +1,8 @@
+{
+	"name": "Body builder cat",
+	"filename": "builder_cat.md",
+	"urls": [
+		["Body builder cat original", "https://9gag.com/gag/aOzq15D"],
+		["Body builder cat article", "https://www.reddit.com/r/dalle2/comments/x85z7d/bodybuilder_losing_arm_wrestling_contest_to_a_cat/"]
+	]
+}
