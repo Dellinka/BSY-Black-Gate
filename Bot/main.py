@@ -1,12 +1,12 @@
+import json
 import os
 import subprocess
 import sys
-import json
 import time
 
 import emojis
-from Bot import gist
-from Bot.Commands import ping
+import gist
+import ping
 
 
 def read_params():

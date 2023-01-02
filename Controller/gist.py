@@ -2,13 +2,11 @@ import os
 import sys
 import time
 import random
-
 import requests
 import gistyc
 import crypto
 import ntpath
-
-from Controller import emojis
+import emojis
 
 
 def get_gist_api():

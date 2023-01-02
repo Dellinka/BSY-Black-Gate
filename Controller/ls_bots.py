@@ -1,6 +1,5 @@
 import sys
-
-from Controller import gist
+import gist
 
 
 def list_current_bots(gist_api, bot_list):

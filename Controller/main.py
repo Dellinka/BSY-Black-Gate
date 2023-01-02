@@ -1,9 +1,8 @@
 import os
 import sys
 import time
-from Controller import gist
-from Controller.Commands import ping
-from Controller.Commands.ls_bots import list_current_bots
+import gist, ping
+import ls_bots
 from threading import Thread
 from timeit import default_timer as timer
 
@@ -73,7 +72,7 @@ def executor():
             match cmd[0]:
                 case "ls_bots":
                     print("ls_bots executing", file=sys.stderr)
-                    list_current_bots(GIST_API, BOT_LIST)
+                    ls_bots.list_current_bots(GIST_API, BOT_LIST)
 
                 case "exit":
                     return

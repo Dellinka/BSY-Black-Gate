@@ -1,8 +1,7 @@
 import random
-import sys
 
-from Bot import gist
-from Bot import emojis
+import gist
+import emojis
 
 
 def set_alive(gist_api, filename):

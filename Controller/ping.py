@@ -1,8 +1,8 @@
 import random
 import sys
 
-from Controller import gist
-from Controller import emojis
+import gist
+import emojis
 
 
 def send(gist_api, bot_list):

@@ -4,7 +4,7 @@ import sys
 import requests
 import gistyc
 
-from Bot import crypto, emojis
+import crypto, emojis
 
 
 def get_gist_api():
@@ -59,7 +59,7 @@ def create_bot_post(gist_api, name, filename, urls):
                                 "### Level of fluffiness 🐈‍⬛ \n" \
                                 "### Interesting links"
         for url_data in urls:
-            content += "\n[" + url_data[0] + "](" + url_data[1] + ")"
+            content += "\n* [" + url_data[0] + "](" + url_data[1] + ")"
 
         return content
 
