@@ -1,17 +1,5 @@
 # BSY-Black-Gate
 
-## Usage 
-```
-<command name> [bot name] [parameter1 ...]
-
-ls_bots							(lists all currently available bots)
-w  <bot filename> 				(lists users currently logged in)
-ls <bot filename> <PATH> 		(list content of specified directory)
-id <bot filename> 				(id of current user)
-cp <bot filename> <PATH> 		(copy fole from the bot to controller)
-exec <bot filename> <PATH> 		(execute a binary inside the bot given the name of the binary)
-```
-
 ## Overview
 In this project there are implemented bot and controller codes who communicate using the gist.github.com only. Using the controller user can send defined commands to the bot using bots id (can be listed using ls_bots command). Each bot has its own post on gist. All bots are listed inside ```CatsIWantToPet.md``` as the name of their post with the link. Using this list, controller can easily find all the bot posts.
 
@@ -28,6 +16,18 @@ After running the bot it reads and stores the parameters from specified PATH. If
 
 ## Controller
 **Controller** has two threads, reader and executor. Inside reader thread the controller is waiting for user commands. The commands are stored in command array and are executed in order by executor thread. The executor thread also periodically (every 5 minutes) send ping command to all bots to check if they are still alive.
+### Usage 
+```
+<command name> [bot name] [parameter1 ...]
+
+ls_bots							(lists all currently available bots)
+exists							(stop controller)
+w  <bot filename> 				(lists users currently logged in)
+ls <bot filename> <PATH> 		(list content of specified directory)
+id <bot filename> 				(id of current user)
+cp <bot filename> <PATH> 		(copy fole from the bot to controller)
+exec <bot filename> <PATH> 		(execute a binary inside the bot given the name of the binary)
+```
 
 ## Commands
 All the commands are specified by controller in fluffiness level in the bot post. The status is then reset and controller is checking the status for response status.

