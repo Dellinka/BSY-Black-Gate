@@ -6,6 +6,13 @@ from Controller import emojis
 
 
 def reset_bots(gist_api, bot_list):
+    """
+    Add reset emoji to all the bots' status (level of cuteness).
+
+    :param gist_api:
+    :param bot_list:
+    :return: None
+    """
     # Reset status code (level of cuteness)
     bot_list_content = gist.get_raw(gist_api, bot_list)
     lines = bot_list_content.split('\n')
@@ -24,7 +31,13 @@ def reset_bots(gist_api, bot_list):
 
 
 def check_bots(gist_api, bot_list):
-    # Check status code (level of cuteness) -> if still reset -> kill them
+    """
+    Check status code (level of cuteness) -> if still reset -> kill them
+
+    :param gist_api:
+    :param bot_list:
+    :return: None
+    """
     new_bot_list_split = []
     bot_list_content = gist.get_raw(gist_api, bot_list)
     lines = bot_list_content.split('\n')

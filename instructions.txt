@@ -12,7 +12,7 @@
 The minimum orders are the following commands:
 	- w (list of users currently logged in)
 	- ls <PATH> (list content of specified directory)
-	- id (if of current user)
+	- id (id of current user)
 	- Copy a file from the bot to the controller. The file name is specified
 	- Execute a binary inside the bot given the name of the binary. Example: ‘/usr/bin/ps
 
