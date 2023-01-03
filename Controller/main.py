@@ -102,7 +102,7 @@ def executor():
                 case "cp":
                     print("cp {} executing".format(cmd[2]), file=sys.stderr)
                     if gist.send_command(GIST_API, "cp", cmd[1], cmd[2]):
-                        if gist.check_response(GIST_API, cmd[1]):
+                        if gist.check_response(GIST_API, cmd[1], time_to_wait=60):
                             gist.save_file_response(GIST_API, cmd[1], cmd[2])
                             print("{} SUCCESSFULLY COPIED (see copies dir)".format(cmd[2]), file=sys.stderr)
 

@@ -200,6 +200,8 @@ def send_file_respose_url(gist_api, filename, file):
         # Change bot status
         content_split[1] = "### Level of cuteness " + random.choice(emojis.status_code['success'])
     except:
+        new_last_url = content_split[-1].split("#")[0] + ")"
+        content_split[-1] = new_last_url
         content_split[1] = "### Level of cuteness " + random.choice(emojis.status_code['error'])
 
     # Update gist

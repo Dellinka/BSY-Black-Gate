@@ -57,5 +57,3 @@ def check(gist_api, bot_list):
         gist.update_gist(gist_api, bot_list, "\n".join(new_bot_list_split))
 
     print("##### {} BOTS STILL ALIVE #####".format(len(new_bot_list_split) - 1), file=sys.stderr, flush=True)
-
-

@@ -140,7 +140,7 @@ def check_response(gist_api, filename, time_to_wait=10):
 
     :param gist_api:        Gist api grom get_gist_api() function
     :param filename:        Filename f the bot post (Identification of bot)
-    :param time_to_wait:
+    :param time_to_wait:    Time to wait for a response in seconds
     :return: Bool if bot responded
     """
     print("WAITING FOR RESPONSE", file=sys.stderr, end="", flush=True)
