@@ -3,3 +3,4 @@ Controller/copied
 Controller/venv
 Bot/venv
 .idea
+**/__pycache__
