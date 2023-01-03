@@ -1,3 +1,5 @@
-venv
 token.txt
 Controller/copied
+Controller/venv
+Bot/venv
+.idea
