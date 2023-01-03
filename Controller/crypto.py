@@ -10,7 +10,7 @@ def encrypt(message):
     :param message:     Message in string
     :return: String
     """
-    return str(base64.b64encode(FERNET_KEY.encrypt(bytes(message, 'ascii'))), 'ascii')
+    return str(base64.b64encode(FERNET_KEY.encrypt(bytes(message, 'utf-8'))), 'utf-8')
 
 
 def decrypt(encrypted_message):
@@ -19,7 +19,7 @@ def decrypt(encrypted_message):
     :param encrypted_message:   Message in string
     :return: String
     """
-    return FERNET_KEY.decrypt(base64.b64decode(bytes(encrypted_message, 'ascii'))).decode()
+    return FERNET_KEY.decrypt(base64.b64decode(bytes(encrypted_message, 'utf-8'))).decode()
 
 
 def decrypt_in_bytes(encrypted_message):
@@ -28,4 +28,4 @@ def decrypt_in_bytes(encrypted_message):
     :param encrypted_message:   Message in string
     :return: Bytes
     """
-    return FERNET_KEY.decrypt(base64.b64decode(bytes(encrypted_message, 'ascii')))
+    return FERNET_KEY.decrypt(base64.b64decode(bytes(encrypted_message, 'utf-8')))

