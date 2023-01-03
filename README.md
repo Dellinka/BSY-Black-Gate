@@ -9,12 +9,13 @@ Each bot has predefined post with these headings (SAME ORDER AND ### HEADINGS!)
 - Interesting links = for sending encrypted data (Originally the idea was to send longer/all responses from bot using image with data embedded at the end. However I found out that Gist API does not support binary data)
 
 ### How does the communication work?
-After sending command to controller, the controller updates command emoji in the Level of fluffiness and reset status emoji in Level of cuteness in defined bot's post. Than he is waiting for a response by checking the status emoji. Bots are checking the status periodically and if the status is changed to reset the bot reads the command emoji. When bot executes defined command he updates the status to success/error and send encrypted response at the end of the last url in post. Controller than sees the status and can read the response from post. As the response can be quite long (it is a problem as gist than show the url instead of the link name) the controller removes it immediately after reading.
+After sending command to controller, the controller updates command emoji in the Level of fluffiness and reset status emoji in Level of cuteness in defined bot's post. Than it is waiting for a response by checking the status emoji. Bots are checking the status periodically and if the status is changed to reset the bot reads the command emoji. When bot executes defined command it updates the status to success/error and send encrypted response at the end of the last url in post. Controller than sees the status and can read the response from post. As the response can be quite long (it is a problem as gist than show the url instead of the link name) the controller removes it immediately after reading.
 
 For more information on the emojis coding see the ```emojis.py``` in Controller or Bot directory.
 
+## How to run the code
 
-## IMPORTANT
+### Get gist access token
 The controller and bot communicates via gist.github.com. For that GitHub Personal access token with GIST access is improtant. You have to create a ```token.txt``` file (in this repository root directory) with this token to run the code. 
 
 How to get the Personal access token with GIST access:
@@ -25,11 +26,10 @@ How to get the Personal access token with GIST access:
   - Set a mark at <b>gist</b> (<i>Create gists</i>) and click on <b>Generate token</b> at the bottom of the page
   - IMPORTANT: The displayed token appears only once. Copy it and store it in your GitHub project as a secret and / or locally as an environment variable.
 
-
-## How to run the code
-Both bot and controller have own run script in their respective directories. The scripts create virtual environment, download all the dependencied from ```requirements.txt``` and run the code.  Run the code using the command below
- -```./run.sh```
- -```./run.sh <PATH_TO_JSON_FILE>``` 
+### Run codes
+Both bot and controller have own run script in their respective directories. The scripts create virtual environment, download all the dependencied from ```requirements.txt``` and run the code.  You can run the code using the command below (see Bot part for info on path to path file)
+  - Controller dir: ```./run.sh```
+  - Bot dir: ```./run.sh <PATH_TO_JSON_FILE>``` 
 
 
 ## Bot
@@ -44,16 +44,16 @@ After running the bot it reads and stores the parameters from specified paramete
 <command name> [bot name] [parameter1 ...]
 
 help                          (list possible commands)
-ls_bots							          (lists all currently available bots)
+ls_bots                       (lists all currently available bots)
 todo                          (list all the queued commands)
-exit  							          (stop controller)
+exit                          (stop controller)
 ping                          (ping all bots manually)
-w  <bot filename> 				    (lists users currently logged in)
-ls <bot filename> <PATH> 	    (list content of specified directory)
-id <bot filename> 				    (id of current user)
-cp <bot filename> <PATH> 		  (copy fole from the bot to controller)
-exec <bot filename> <PATH> 		(execute a binary inside the bot given the name of the binary)
+w  <bot filename>             (lists users currently logged in)
+ls <bot filename> <PATH>      (list content of specified directory)
+id <bot filename>             (id of current user)
+cp <bot filename> <PATH>      (copy fole from the bot to controller)
+exec <bot filename> <PATH>    (execute a binary inside the bot given the name of the binary)
 ```
 
-## Bots checking
-The controller sends ```ping``` command to all the bots every 5 minutes (the command is specified in the fluffiness level). If bot receives ping command, he change its status to success emoji. If the status is still reset after 15 seconds, controller removes the bot from bot list the and removes its bots post as well.
+### Bots checking
+The controller sends ```ping``` command to all the bots every 5 minutes (the command is specified in the fluffiness level). If bot receives ping command, it changes its status to success emoji. If the status is still reset after 15 seconds, controller removes the bot from bot list the and removes its bots post as well.
