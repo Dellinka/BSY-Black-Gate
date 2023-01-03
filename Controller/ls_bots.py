@@ -23,7 +23,7 @@ def list_current_bots(gist_api, bot_list):
         if not line.startswith('###'):
             continue
 
-        print(".", file=sys.stderr, end="")
+        print(".", file=sys.stderr, end="", flush=True)
 
         # Name, Filename, Id
         name = line.split("[")[1].split("]")[0]

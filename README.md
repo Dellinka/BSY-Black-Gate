@@ -6,8 +6,7 @@ In this project there are implemented bot and controller codes who communicate u
 Each bot has predefined post with these headings (SAME ORDER AND ### HEADINGS!)  
 - Level of cuteness = status code (success, error, reset) for checking if command was completed successfully
 - Level of fluffiness = specified command
-- Interesting links = for sending small string data
-- Image = for sending larger data
+- Interesting links = for sending encrypted data (Originally the idea was to send longer/all responses from bot using image with data embedded at the end. However I found out that Gist API does not support binary data)
 
 
 ## IMPORTANT
@@ -22,6 +21,12 @@ How to get the Personal access token with GIST access:
   - IMPORTANT: The displayed token appears only once. Copy it and store it in your GitHub project as a secret and / or locally as an environment variable.
 
 
+## How to run the code
+Both bot and controller have own run script in their respective directories. Run the code using the command below
+```./run.sh```
+```./run.sh <PATH_TO_JSON_FILE>``` 
+The scripts create virtual environment, download all the dependencied from ```requirements.txt``` and run the code. 
+
 
 ## Bot
 **Bot** takes one parameter to run - PATH to json file with bot parameters. There are two examples in Cats directory. Inside the ```<params>.json``` is JSON with bots parameters including name, filename and urls (see example files for more info).
@@ -35,7 +40,7 @@ After running the bot it reads and stores the parameters from specified file def
 <command name> [bot name] [parameter1 ...]
 
 ls_bots							          (lists all currently available bots)
-exists							          (stop controller)
+exist 							          (stop controller)
 w  <bot filename> 				    (lists users currently logged in)
 ls <bot filename> <PATH> 	    (list content of specified directory)
 id <bot filename> 				    (id of current user)

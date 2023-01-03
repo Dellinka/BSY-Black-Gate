@@ -35,7 +35,7 @@ def init(gist_api, name, filename, urls, bot_list):
     """
     # Check if this name is in bot list
     if "[" + name + "]" in get_raw(gist_api, bot_list):
-        print(name + " SAYS BYE BYE (There is already a bot with this name in bot list)", file=sys.stderr)
+        print(name + " SAYS BYE BYE (There is already a bot with this name in bot list)", file=sys.stderr, flush=True)
         exit(-2)
 
     bot_url = create_bot_post(gist_api, name, filename, urls)

