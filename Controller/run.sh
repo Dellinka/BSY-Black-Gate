@@ -7,7 +7,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 
 # Running the controller
-python3 main.py 
+python3 main.py
 
 # Deactivating the environment
 deactivate

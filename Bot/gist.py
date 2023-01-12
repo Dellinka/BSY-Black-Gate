@@ -14,7 +14,7 @@ def get_gist_api():
     :return: GIST_API (str)
     """
     with open('../token.txt') as f:
-        AUTH_TOKEN = f.readline()
+        AUTH_TOKEN = f.readline().strip()
 
     if len(AUTH_TOKEN) == 0:
         exit(-1)
